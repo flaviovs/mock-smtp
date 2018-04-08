@@ -10,6 +10,11 @@ import datetime
 import email.utils
 import signal
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 logging.basicConfig(stream=sys.stderr,
                     format='%(asctime)s %(levelname)s: %(message)s',
                     level=logging.DEBUG)
@@ -29,7 +34,15 @@ class MockSMTPServer(smtpd.SMTPServer):
         for to in rcpttos:
             mail.write('Envelope-To: <%s>\n' % to)
         mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today))
-        mail.write(data)
+
+        in_header = True
+        for line in StringIO(data):
+            if in_header and not ':' in line:
+                if not line in ['\n', '\r\n']:
+                    mail.write('\n')
+                in_header = False
+            mail.write(line)
+
         mail.close()
 
         logging.info('%s => %s: %s', mailfrom, rcpttos, file)

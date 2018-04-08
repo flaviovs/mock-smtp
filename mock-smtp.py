@@ -5,6 +5,7 @@ import os
 import smtpd
 import asyncore
 import logging
+import time
 import datetime
 import email.utils
 import signal
@@ -19,15 +20,15 @@ class MockSMTPServer(smtpd.SMTPServer):
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
 
-        today = datetime.datetime.today();
+        today = time.time()
 
-        file = '%s.eml' % today.strftime('%Y-%d-%mT%T.%f')
+        file = '%s.eml' % datetime.datetime.fromtimestamp(today).strftime('%Y-%d-%mT%T.%f')
 
         mail = open(file, "w")
         mail.write('Return-Path: <%s>\n' % mailfrom)
         for to in rcpttos:
             mail.write('Envelope-To: <%s>\n' % to)
-        mail.write('Delivery-Date: %s\n' % email.utils.format_datetime(today))
+        mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today))
         mail.write(data)
         mail.close()
 

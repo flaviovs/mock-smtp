@@ -12,7 +12,7 @@ logging.basicConfig(stream=sys.stderr,
                     format='%(asctime)s %(levelname)s: %(message)s',
                     level=logging.DEBUG)
 
-os.chdir('/var/lib/mock-smtp')
+os.chdir(os.getenv('MOCK_SMTP_PATH', '.'))
 
 class MockSMTPServer(smtpd.SMTPServer):
 

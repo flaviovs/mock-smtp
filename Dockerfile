@@ -2,11 +2,12 @@ FROM python:2-alpine3.7
 
 ENV MOCK_SMTP_ADDRESS=0.0.0.0
 ENV MOCK_SMTP_PORT=25
+ENV MOCK_SMTP_PATH=/var/lib/mock-smtp
 
 COPY mock-smtp.py /usr/sbin/mock-smtp
 
 EXPOSE $MOCK_SMTP_PORT
 
-VOLUME /var/lib/mock-smtp
+VOLUME $MOCK_SMTP_PATH
 
 CMD ["/usr/sbin/mock-smtp"]

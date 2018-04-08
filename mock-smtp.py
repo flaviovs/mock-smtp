@@ -7,6 +7,7 @@ import asyncore
 import logging
 import datetime
 import email.utils
+import signal
 
 logging.basicConfig(stream=sys.stderr,
                     format='%(asctime)s %(levelname)s: %(message)s',
@@ -33,6 +34,12 @@ class MockSMTPServer(smtpd.SMTPServer):
         logging.info('%s => %s: %s', mailfrom, rcpttos, file)
 
 
+def handle_signal(signalnum, frame):
+    if signalnum == signal.SIGTERM:
+        #asyncore.socket_map.clear()
+        raise asyncore.ExitNow('SIGTERM')
+
+
 logging.info('Starting up Mock SMTP server')
 
 smtp_server = MockSMTPServer((os.getenv('MOCK_SMTP_ADDRESS', '127.0.0.1'),
@@ -48,8 +55,15 @@ if os.getuid() == 0:
     os.setuid(stat.st_gid)
     os.umask(0o77)
 
+# Install signal handler, for handling SIGTERM.
+signal.signal(signal.SIGTERM, handle_signal)
+
 # Start the server
 try:
     asyncore.loop()
-except KeyboardInterrupt:
-    smtp_server.close()
+except (KeyboardInterrupt, asyncore.ExitNow):
+    pass
+except Exception as ex:
+    logging.exception(ex)
+
+smtp_server.close()

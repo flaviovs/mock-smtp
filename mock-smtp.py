@@ -35,7 +35,8 @@ class MockSMTPServer(smtpd.SMTPServer):
 
 logging.info('Starting up Mock SMTP server')
 
-smtp_server = MockSMTPServer((os.getenv('MOCK_SMTP_ADDRESS', '0.0.0.0'), 25),
+smtp_server = MockSMTPServer((os.getenv('MOCK_SMTP_ADDRESS', '127.0.0.1'),
+                              int(os.getenv('MOCK_SMTP_PORT', '25'))),
                              None)
 
 # Switch to UID/GID of owner of current path.

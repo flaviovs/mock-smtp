@@ -39,13 +39,14 @@ smtp_server = MockSMTPServer((os.getenv('MOCK_SMTP_ADDRESS', '127.0.0.1'),
                               int(os.getenv('MOCK_SMTP_PORT', '25'))),
                              None)
 
-# Switch to UID/GID of owner of current path.
-stat = os.stat('.')
-os.setgroups([])
+if os.getuid() == 0:
+    # Switch to UID/GID of owner of current path.
+    stat = os.stat('.')
+    os.setgroups([])
 
-os.setgid(stat.st_uid)
-os.setuid(stat.st_gid)
-os.umask(0o77)
+    os.setgid(stat.st_uid)
+    os.setuid(stat.st_gid)
+    os.umask(0o77)
 
 # Start the server
 try:

@@ -27,7 +27,7 @@ class MockSMTPServer(smtpd.SMTPServer):
 
         today = time.time()
 
-        file = '%s.eml' % datetime.datetime.fromtimestamp(today).strftime('%Y-%d-%mT%T.%f')
+        file = '%s.eml' % datetime.datetime.fromtimestamp(today).strftime('%Y-%m-%dT%T.%f')
 
         mail = open(file, "w")
         mail.write('Return-Path: <%s>\n' % mailfrom)

@@ -33,7 +33,7 @@ class MockSMTPServer(smtpd.SMTPServer):
         mail.write('Return-Path: <%s>\n' % mailfrom)
         for to in rcpttos:
             mail.write('Envelope-To: <%s>\n' % to)
-        mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today))
+        mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today, True))
 
         in_header = True
         for line in data.splitlines():

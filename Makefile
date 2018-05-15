@@ -4,7 +4,7 @@ all: build
 
 build: build-stamp
 
-build-stamp: Dockerfile mock-smtp.py
+build-stamp: Dockerfile mock-smtp.py Makefile
 	docker build -t flaviovs/mock-smtp:$(VERSION) .
 	docker tag flaviovs/mock-smtp:$(VERSION) flaviovs/mock-smtp:latest
 	: > $@

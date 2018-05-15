@@ -36,12 +36,11 @@ class MockSMTPServer(smtpd.SMTPServer):
         mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today))
 
         in_header = True
-        for line in StringIO(data):
+        for line in data.splitlines():
             if in_header and not ':' in line:
-                if not line in ['\n', '\r\n']:
-                    mail.write('\n')
-                in_header = False
-            mail.write(line)
+                mail.write('\n')
+            in_header = False
+            mail.write('%s\n' % line)
 
         mail.close()
 

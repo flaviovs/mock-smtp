@@ -9,6 +9,9 @@ import time
 import datetime
 import email.utils
 import signal
+import platform
+
+HOSTNAME = platform.node()
 
 try:
     from StringIO import StringIO
@@ -27,13 +30,21 @@ class MockSMTPServer(smtpd.SMTPServer):
 
         today = time.time()
 
+        rfc822_date = email.utils.formatdate(today, True)
+
         file = '%s.eml' % datetime.datetime.fromtimestamp(today).strftime('%Y-%m-%dT%T.%f')
 
         mail = open(file, "w")
         mail.write('Return-Path: <%s>\n' % mailfrom)
+        mail.write('Received: from [%s] by %s\n'
+                   ' (Mock SMTP -- https://github.com/flaviovs/mock-smtp) with SMTP\n'
+                   ' id %s\n'
+                   ' for <%s>; %s\n' % (peer[0], HOSTNAME, file,
+                                        rcpttos[0], rfc822_date))
+
         for to in rcpttos:
             mail.write('Envelope-To: <%s>\n' % to)
-        mail.write('Delivery-Date: %s\n' % email.utils.formatdate(today, True))
+        mail.write('Delivery-Date: %s\n' % rfc822_date)
 
         in_header = True
         for line in data.splitlines():

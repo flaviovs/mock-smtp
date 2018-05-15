@@ -60,7 +60,6 @@ class MockSMTPServer(smtpd.SMTPServer):
 
 def handle_signal(signalnum, frame):
     if signalnum == signal.SIGTERM:
-        #asyncore.socket_map.clear()
         raise asyncore.ExitNow('SIGTERM')
 
 

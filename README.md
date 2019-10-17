@@ -13,8 +13,8 @@ How to Run via Command Line
     # python mock-smtp.py
 
 By default the server will listen on port 25, and bind to 127.0.0.1, plus
-e-mails will be saved to startup directory. This behaviour can be changes by
-using the following environment variables, respectively:
+e-mails will be saved to the current directory. This behaviour can be changed
+by using the following environment variables, respectively:
 
  - `MOCK_SMTP_ADDRESS`
  - `MOCK_SMTP_PORT`

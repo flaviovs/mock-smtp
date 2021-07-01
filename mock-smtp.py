@@ -54,6 +54,7 @@ class MockSMTPServer(smtpd.SMTPServer):
             mail.write('%s\n' % line)
 
         mail.close()
+        os.chmod(file, 0o777)
 
         logging.info('%s => %s: %s', mailfrom, rcpttos, file)
 
